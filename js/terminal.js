@@ -140,7 +140,7 @@ function runCommand(command) {
 
 window.addEventListener("load", () => {
 
-    input.focus();
+    input.focus({ preventScroll: true });
 
 });
 

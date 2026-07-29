@@ -111,13 +111,12 @@ canvas{
 }
 
 #real-input{
-    position:absolute;
-    opacity:0;
-    pointer-events:none;
-    width:1px;
-    height:1px;
+    position: fixed;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
+    pointer-events: none;
 }
-
 #terminal-text{
     white-space:pre;
     color:white;
