@@ -4,10 +4,6 @@ const input = document.getElementById("real-input");
 const display = document.getElementById("terminal-text");
 const output = document.getElementById("output");
 
-// --------------------
-// Helpers
-// --------------------
-
 function scrollBottom() {
     output.parentElement.scrollTop = output.parentElement.scrollHeight;
 }
@@ -60,10 +56,6 @@ function printHelpLine(name, description) {
 
     output.appendChild(div);
 }
-
-// --------------------
-// Commands
-// --------------------
 
 function findCommand(name) {
 
@@ -146,10 +138,6 @@ function runCommand(command) {
 
 }
 
-// --------------------
-// Focus
-// --------------------
-
 window.addEventListener("load", () => {
 
     input.focus();
@@ -174,10 +162,6 @@ input.addEventListener("blur", () => {
     requestAnimationFrame(() => input.focus());
 
 });
-
-// --------------------
-// Typing
-// --------------------
 
 input.addEventListener("input", () => {
 

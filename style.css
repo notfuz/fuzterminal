@@ -34,66 +34,41 @@ canvas{
 }
 
 #terminal{
-
     position:absolute;
-
     top:50%;
     left:50%;
-
     transform:translate(-50%,-50%);
-
     width:min(850px,90vw);
     height:520px;
-
     background:rgba(10,10,10,.75);
-
     backdrop-filter:blur(12px);
-
     border:1px solid rgba(255,255,255,.08);
-
     border-radius:14px;
-
     overflow:hidden;
-
     color:white;
-
     font-family:Consolas, monospace;
-
     box-shadow:
         0 0 30px rgba(0,0,0,.5);
-
 }
 
 #terminal-header{
-
     height:42px;
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     padding:0 15px;
-
     background:rgba(255,255,255,.04);
-
 }
 
 .traffic{
-
     display:flex;
     gap:8px;
-
 }
 
 .traffic span{
-
     width:12px;
     height:12px;
-
     border-radius:50%;
-
 }
 
 .red{background:#ff5f57;}
@@ -101,91 +76,59 @@ canvas{
 .green{background:#28c840;}
 
 .title{
-
     opacity:.6;
     font-size:14px;
-
 }
 
 #terminal-body{
-
     padding:18px;
-
     overflow-y:auto;
-
     height:calc(100% - 42px);
-
 }
 
 .line{
-
     margin-bottom:8px;
-
 }
 
 .info{
-
     color:#999;
-
 }
 
 .cmd{
-
     color:#5cff87;
-
 }
 
 .prompt{
-
     color:white;
-
 }
 
 .user{
-
     color:#5cff87;
-
 }
 
 .host{
-
     color:#5ca9ff;
-
 }
 
 #real-input{
-
     position:absolute;
-
     opacity:0;
-
     pointer-events:none;
-
     width:1px;
     height:1px;
-
 }
 
 #terminal-text{
-
     white-space:pre;
-
     color:white;
-
 }
 
 #cursor {
-
     color: white;
-
     display: inline-block;
-
     margin-left: 1px;
-
     user-select: none;
-
     animation: blink 1s steps(1) infinite;
-
 }
 
 #input-line {
@@ -196,28 +139,19 @@ canvas{
 }
 
 @keyframes blink{
-
     50%{
-
         opacity:0;
-
     }
-
 }
 
 .command-name {
-
     display: inline-block;
     width: 120px;
-
     color: white;
-
 }
 
 .command-description {
-
     color: #8a8a8a;
-
 }
 
 /* Firefox */
