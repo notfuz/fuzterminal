@@ -1,2 +1,2 @@
-# My-Cool-Site
+# My Cool Site
 hii
