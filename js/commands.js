@@ -39,6 +39,11 @@ export default {
             "Nothing here yet",
         ]
 
-    }
+    },
+
+    gallery: {
+        description: "Open photo gallery",
+        output: []
+    },   
 
 };

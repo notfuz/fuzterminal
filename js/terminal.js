@@ -1,4 +1,5 @@
 import commands from "./commands.js";
+import { openGallery } from "./gallery.js";
 
 const input = document.getElementById("real-input");
 const display = document.getElementById("terminal-text");
@@ -23,7 +24,7 @@ function printCommand(command) {
 
     div.innerHTML = `
         <span class="prompt">
-            <span class="user">fuz</span>@<span class="host">website</span>:~$
+            <span class="user">fuz</span>@<span class="host">terminal</span>:~$
         </span>
         <span class="typed-command">${command}</span>
     `;
@@ -179,6 +180,20 @@ input.addEventListener("keydown", e => {
     const command = input.value.trim();
 
     printCommand(command);
+
+    if (command === "gallery") {
+
+    printLine("");
+    printLine("Opening gallery...");
+    printLine("");
+
+    openGallery();
+
+    input.value = "";
+    display.textContent = "";
+
+    return;
+}
 
     runCommand(command);
 

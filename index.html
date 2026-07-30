@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fuz Site</title>
+    <title>Fuz Terminal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <span class="green"></span>
             </div>
             <div class="title">
-                fuz@website
+                fuz@terminal
             </div>
         </div>
         <div id="terminal-body">
@@ -29,7 +29,7 @@
             <div id="output"></div>
             <div id="input-line">
                 <span class="prompt">
-                    <span class="user">fuz</span>@<span class="host">website</span>:~$
+                    <span class="user">fuz</span>@<span class="host">terminal</span>:~$
                 </span>
                 <span id="terminal-text" class="typed-command"></span>
                 <span id="cursor">▌</span>
@@ -37,6 +37,26 @@
             </div>
         </div>
     </div>
+    <div id="gallery-overlay">
+    <div id="gallery-window">
+        <div id="gallery-header">
+            <div class="traffic">
+                <span class="red"></span>
+                <span class="yellow"></span>
+                <span class="green"></span>
+            </div>
+            <div class="title">
+                gallery@terminal
+            </div>
+        </div>
+        <div id="gallery-content">
+        </div>
+    </div>
+</div>
+<div id="lightbox">
+    <span id="lightbox-close">&times;</span>
+    <img id="lightbox-image">
+</div>
     <div class="vignette"></div>
     <script type="module" src="./js/main.js"></script>
     <script type="module" src="./js/terminal.js"></script>
