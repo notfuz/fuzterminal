@@ -286,3 +286,184 @@ canvas{
 #lightbox-close:hover{
     opacity:1;
 }
+
+.gallery-image{
+    cursor: zoom-in;
+}
+
+#lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.92);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:9999;
+}
+
+#lightbox-image{
+
+    max-width:90%;
+    max-height:90%;
+
+    transition:
+        transform .15s;
+
+    cursor:grab;
+
+    user-select:none;
+}
+
+#lightbox-prev,
+#lightbox-next{
+
+    position:absolute;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+#lightbox-prev:hover,
+#lightbox-next:hover{
+
+    background:rgba(255,255,255,.18);
+
+}
+
+#lightbox-prev{
+
+    left:40px;
+
+}
+
+#lightbox-next{
+
+    right:40px;
+
+}
+
+#lightbox-ui{
+
+    position:absolute;
+
+    bottom:35px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    text-align:center;
+
+    color:white;
+
+    font-family:Consolas,monospace;
+}
+
+#lightbox-caption{
+
+    margin-bottom:8px;
+
+    font-size:17px;
+
+}
+
+#lightbox-counter{
+
+    opacity:.65;
+
+    font-size:14px;
+
+}
+
+#lightbox-close{
+
+    position:absolute;
+
+    top:25px;
+    right:35px;
+
+    font-size:42px;
+
+    cursor:pointer;
+
+    color:white;
+}
+
+#lightbox-image{
+
+    max-width:90%;
+    max-height:90%;
+
+    transition:transform .15s;
+
+    transform-origin:center center;
+
+    transform:translate(0px,0px) scale(1);
+
+    cursor:grab;
+
+    user-select:none;
+
+}
+
+#lightbox-image{
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+}
+
+/* Firefox */
+#gallery-content{
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.18) transparent;
+}
+
+/* Chrome / Edge */
+#gallery-content::-webkit-scrollbar{
+    width:8px;
+}
+
+#gallery-content::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+#gallery-content::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.15);
+    border-radius:999px;
+}
+
+#gallery-content::-webkit-scrollbar-thumb:hover{
+    background:rgba(255,255,255,.25);
+}
+
+#lightbox-image{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform-origin:center center;
+
+}

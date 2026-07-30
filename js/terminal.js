@@ -69,8 +69,12 @@ function findCommand(name) {
 
         const cmd = commands[key];
 
-        if (cmd.aliases && cmd.aliases.includes(name))
+        if (
+            cmd.aliases &&
+            cmd.aliases.includes(name)
+        ) {
             return cmd;
+        }
 
     }
 
@@ -95,9 +99,16 @@ function runCommand(command) {
         printLine("Available commands:");
         printLine("");
 
-        for (const key in commands) {
-            printHelpLine(key, commands[key].description);
-        }
+for (const key in commands) {
+
+    const cmd = commands[key];
+
+    if (cmd.hidden)
+        continue;
+
+    printHelpLine(key, cmd.description);
+
+}
 
         printHelpLine("help", "Show all commands");
         printHelpLine("clear", "Clear the terminal");
@@ -183,11 +194,20 @@ input.addEventListener("keydown", e => {
 
     if (command === "gallery") {
 
-    printLine("");
-    printLine("Opening gallery...");
-    printLine("");
+printLine("");
+printLine("Launching gallery.");
 
+setTimeout(() => {
+    printLine("Loading images...");
+}, 200);
+
+setTimeout(() => {
+    printLine("Done.");
+}, 1000);
+
+setTimeout(() => {
     openGallery();
+}, 1300);
 
     input.value = "";
     display.textContent = "";
