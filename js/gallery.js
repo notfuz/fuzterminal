@@ -140,6 +140,17 @@ export async function openGallery(){
 
 export function closeGallery(){
 
+    if (lightboxMedia && lightboxMedia.tagName === "VIDEO") {
+        lightboxMedia.pause();
+        lightboxMedia.currentTime = 0;
+    }
+
+    if (lightboxMedia) {
+        lightboxMedia.remove();
+        lightboxMedia = null;
+    }
+
+    lightbox.style.display = "none";
     overlay.style.display = "none";
 
 }
@@ -154,6 +165,7 @@ function openLightbox(albumIndex, itemIndex){
     renderLightboxItem(currentItems[currentIndex], albumIndex);
 
     lightbox.style.display = "flex";
+    overlay.style.display = "flex";
 
 }
 
@@ -398,8 +410,20 @@ lightbox.addEventListener("click", e => {
 
     if (e.target === lightbox) {
 
-        lightbox.style.display = "none";
+        if (lightboxMedia && lightboxMedia.tagName === "VIDEO") {
+            lightboxMedia.pause();
+            lightboxMedia.currentTime = 0;
+        }
 
+        if (lightboxMedia) {
+            lightboxMedia.remove();
+            lightboxMedia = null;
+        }
+
+        lightbox.style.display = "none";
+        camera.x = 0;
+        camera.y = 0;
+        camera.scale = 1;
     }
 
 });

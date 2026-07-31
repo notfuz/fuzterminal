@@ -198,10 +198,16 @@ const scene = [
 ];
 
 let last = performance.now();
+let frameCount = 0;
 
 function animate(now) {
 
     requestAnimationFrame(animate);
+
+    frameCount += 1;
+    if (frameCount % 2 !== 0) {
+        return;
+    }
 
     const dt = now - last;
     last = now;

@@ -1,10 +1,43 @@
 import commands from "./commands.js";
-import { openGallery } from "./gallery.js";
-import { openProfile } from "./profile.js";
+import { openGallery, closeGallery } from "./gallery.js";
+import { openProfile, closeProfile } from "./profile.js";
 
 const input = document.getElementById("real-input");
 const display = document.getElementById("terminal-text");
 const output = document.getElementById("output");
+
+let terminalLocked = false;
+let pendingInputValue = "";
+
+function isOverlayOpen() {
+    const profileOverlay = document.getElementById("profile-overlay");
+    const galleryOverlay = document.getElementById("gallery-overlay");
+    return profileOverlay?.style.display === "flex" || galleryOverlay?.style.display === "flex";
+}
+
+function clearTerminalInput() {
+    input.value = "";
+    display.textContent = "";
+    pendingInputValue = "";
+}
+
+function lockTerminal() {
+    terminalLocked = true;
+    input.disabled = true;
+    input.style.opacity = "0.6";
+}
+
+function unlockTerminal() {
+    terminalLocked = false;
+    input.disabled = false;
+    input.style.opacity = "1";
+    clearTerminalInput();
+    requestAnimationFrame(() => {
+        input.focus({ preventScroll: true });
+        const len = input.value.length;
+        input.setSelectionRange(len, len);
+    });
+}
 
 function scrollBottom() {
     output.parentElement.scrollTop = output.parentElement.scrollHeight;
@@ -159,6 +192,8 @@ window.addEventListener("load", () => {
 
 document.addEventListener("pointerdown", e => {
 
+    if (terminalLocked) return;
+
     if (
         e.target.tagName === "A" ||
         e.target.tagName === "BUTTON" ||
@@ -172,17 +207,24 @@ document.addEventListener("pointerdown", e => {
 
 input.addEventListener("blur", () => {
 
+    if (terminalLocked) return;
     requestAnimationFrame(() => input.focus());
 
 });
 
 input.addEventListener("input", () => {
 
-    display.textContent = input.value;
+    pendingInputValue = input.value;
+    display.textContent = pendingInputValue;
 
 });
 
 input.addEventListener("keydown", e => {
+
+    if (terminalLocked) {
+        e.preventDefault();
+        return;
+    }
 
     if (e.key !== "Enter")
         return;
@@ -190,8 +232,14 @@ input.addEventListener("keydown", e => {
     e.preventDefault();
 
     const command = input.value.trim();
+    pendingInputValue = command;
 
     printCommand(command);
+
+    if (isOverlayOpen()) {
+        lockTerminal();
+        return;
+    }
 
     if (command === "gallery") {
 
@@ -210,18 +258,18 @@ setTimeout(() => {
     openGallery();
 }, 1300);
 
-    input.value = "";
-    display.textContent = "";
+    clearTerminalInput();
 
     return;
 }
 
     runCommand(command);
 
-    input.value = "";
-    display.textContent = "";
+    clearTerminalInput();
 
     if (command === "profile") {
+
+    lockTerminal();
 
     printLine("");
     printLine("Connecting to Discord...");
@@ -239,10 +287,27 @@ setTimeout(() => {
 
     }, 800);
 
-    input.value = "";
-    display.textContent = "";
+    clearTerminalInput();
 
     return;
 }
 
 });
+
+const profileOverlay = document.getElementById("profile-overlay");
+const galleryOverlay = document.getElementById("gallery-overlay");
+
+function syncTerminalLock() {
+    if (isOverlayOpen()) {
+        lockTerminal();
+    } else {
+        unlockTerminal();
+    }
+}
+
+const observer = new MutationObserver(() => {
+    syncTerminalLock();
+});
+
+observer.observe(profileOverlay, { attributes: true, attributeFilter: ["style"] });
+observer.observe(galleryOverlay, { attributes: true, attributeFilter: ["style"] });

@@ -1,0 +1,5 @@
+when u close the gallery while watchinga  video the cideo still plays... fix that
+when u have a window open for example the profile window u can still type in the background... fix that
+and also fix the fucking performance with the profile and gallery :D
+and also fix the activity card for when u have 1 activity it says multiple even tho u only have 1 active
+theres probably more im gonna find later on

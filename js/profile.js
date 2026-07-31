@@ -1,10 +1,6 @@
 const API =
     "https://api.lanyard.rest/v1/users/1187401892435869737";
 
-/* ========================================= */
-/* ELEMENTS                                  */
-/* ========================================= */
-
 const overlay =
     document.getElementById("profile-overlay");
 
@@ -75,10 +71,6 @@ const badges =
 let profileRefreshTimer = null;
 let profileRefreshIntervalMs = 15000;
 
-/* ========================================= */
-/* STATUS                                    */
-/* ========================================= */
-
 const STATUS = {
 
     online: {
@@ -115,10 +107,6 @@ const STATUS = {
 
 };
 
-/* ========================================= */
-/* OPEN PROFILE                              */
-/* ========================================= */
-
 export async function openProfile(){
 
     overlay.style.display = "flex";
@@ -136,20 +124,12 @@ export async function openProfile(){
 
 }
 
-/* ========================================= */
-/* CLOSE PROFILE                             */
-/* ========================================= */
-
 export function closeProfile(){
 
     stopProfileAutoRefresh();
     overlay.style.display = "none";
 
 }
-
-/* ========================================= */
-/* AUTO REFRESH                              */
-/* ========================================= */
 
 function startProfileAutoRefresh(){
 
@@ -174,10 +154,6 @@ function stopProfileAutoRefresh(){
     }
 
 }
-
-/* ========================================= */
-/* FETCH PROFILE                             */
-/* ========================================= */
 
 async function fetchProfile(options = {}){
 
@@ -240,10 +216,6 @@ async function fetchProfile(options = {}){
 
 }
 
-/* ========================================= */
-/* EVENTS                                    */
-/* ========================================= */
-
 overlay.addEventListener("click", event => {
 
     if(event.target === overlay){
@@ -287,10 +259,6 @@ copyButton.addEventListener("click", async () => {
 
 });
 
-/* ========================================= */
-/* RENDER PROFILE                            */
-/* ========================================= */
-
 function renderProfile(data){
 
     const user =
@@ -311,10 +279,6 @@ function renderProfile(data){
     renderMemberSince(user);
 
 }
-
-/* ========================================= */
-/* BANNER                                    */
-/* ========================================= */
 
 function renderBanner(data){
 
@@ -339,10 +303,6 @@ function renderBanner(data){
     `;
 
 }
-
-/* ========================================= */
-/* AVATAR                                    */
-/* ========================================= */
 
 function renderAvatar(user, data){
 
@@ -383,10 +343,6 @@ function renderAvatar(user, data){
         STATUS.offline.colour;
 
 }
-
-/* ========================================= */
-/* PROFILE INFO                              */
-/* ========================================= */
 
 function renderProfileInfo(user, data){
 
@@ -434,10 +390,6 @@ function renderProfileInfo(user, data){
 
 }
 
-/* ========================================= */
-/* MEMBER SINCE                              */
-/* ========================================= */
-
 function renderMemberSince(user){
 
     const discordEpoch =
@@ -471,10 +423,6 @@ function renderMemberSince(user){
         );
 
 }
-
-/* ========================================= */
-/* ACTIVITY                                  */
-/* ========================================= */
 
 function renderActivity(data){
 
@@ -525,8 +473,8 @@ function renderActivity(data){
         Boolean(listeningToSpotify && spotify);
 
     const hasMultipleActivities =
-        Boolean(isSpotify && activities.length) ||
-        activities.length > 1;
+        activities.length > 1 ||
+        (isSpotify && activities.length > 0 && activities[0]?.name && activities[0].name !== "Spotify");
 
     const act = isSpotify ? spotify : richActivity;
     const image = isSpotify ?
@@ -737,10 +685,6 @@ function formatDuration(ms){
 
 }
 
-/* ========================================= */
-/* ACTIVITY IMAGES                           */
-/* ========================================= */
-
 function resolveActivityImage(activity){
 
     if(
@@ -811,10 +755,6 @@ function resolveActivityImage(activity){
 
 }
 
-/* ========================================= */
-/* DEVICES                                   */
-/* ========================================= */
-
 function renderDevices(data){
 
     devices.innerHTML = "";
@@ -873,10 +813,6 @@ function renderDevices(data){
     }
 
 }
-
-/* ========================================= */
-/* BADGES                                    */
-/* ========================================= */
 
 function renderBadges(user){
 
@@ -981,10 +917,6 @@ function renderBadges(user){
     }
 
 }
-
-/* ========================================= */
-/* HELPERS                                   */
-/* ========================================= */
 
 avatar.addEventListener("error", () => {
 
