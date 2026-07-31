@@ -1,5 +1,6 @@
 import commands from "./commands.js";
 import { openGallery } from "./gallery.js";
+import { openProfile } from "./profile.js";
 
 const input = document.getElementById("real-input");
 const display = document.getElementById("terminal-text");
@@ -219,5 +220,29 @@ setTimeout(() => {
 
     input.value = "";
     display.textContent = "";
+
+    if (command === "profile") {
+
+    printLine("");
+    printLine("Connecting to Discord...");
+
+    setTimeout(() => {
+
+        printLine("Fetching profile...");
+
+    }, 300);
+
+    setTimeout(() => {
+
+        printLine("Done.");
+        openProfile();
+
+    }, 800);
+
+    input.value = "";
+    display.textContent = "";
+
+    return;
+}
 
 });

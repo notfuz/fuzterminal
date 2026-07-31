@@ -1,11 +1,10 @@
-import photos from "./galleryData.js";
+import loadAlbums from "./galleryData.js";
 
 const overlay = document.getElementById("gallery-overlay");
 const content = document.getElementById("gallery-content");
 
 const lightbox = document.getElementById("lightbox");
-const lightboxImage = document.getElementById("lightbox-image");
-
+const lightboxViewport = document.getElementById("lightbox-viewport");
 const lightboxClose = document.getElementById("lightbox-close");
 const lightboxPrev = document.getElementById("lightbox-prev");
 const lightboxNext = document.getElementById("lightbox-next");
@@ -13,7 +12,10 @@ const lightboxNext = document.getElementById("lightbox-next");
 const lightboxCaption = document.getElementById("lightbox-caption");
 const lightboxCounter = document.getElementById("lightbox-counter");
 
+let albums = [];
+let currentItems = [];
 let currentIndex = 0;
+let lightboxMedia = document.getElementById("lightbox-image");
 
 const camera = {
 
@@ -34,8 +36,10 @@ const camera = {
 
 function render(){
 
-    lightboxImage.style.transform =
-        `translate(calc(-50% + ${camera.x}px), calc(-50% + ${camera.y}px)) scale(${camera.scale})`;
+    if (lightboxMedia) {
+        lightboxMedia.style.transform =
+            `translate(calc(-50% + ${camera.x}px), calc(-50% + ${camera.y}px)) scale(${camera.scale})`;
+    }
 
 }
 
@@ -60,38 +64,70 @@ overlay.addEventListener("click", e=>{
 
 });
 
-export function openGallery(){
+export async function openGallery(){
 
     content.innerHTML = "";
 
-    photos.forEach((photo,index)=>{
+    try {
+
+        albums = await loadAlbums();
+
+    } catch (error) {
+
+        console.error(error);
+        content.innerHTML = "<div class='gallery-empty'>Unable to load albums.</div>";
+        overlay.style.display = "flex";
+        return;
+
+    }
+
+    if (!albums.length) {
+
+        content.innerHTML = "<div class='gallery-empty'>No albums found.</div>";
+        overlay.style.display = "flex";
+        return;
+
+    }
+
+    albums.forEach((album, albumIndex) => {
 
         const card = document.createElement("div");
-
         card.className = "gallery-item";
 
+        const previewItems = (album.items || []).slice(0, 4);
+        const previewMarkup = previewItems.map((item, index) => {
+            const isVideo = item.type === "video";
+            return `
+                <div class="gallery-preview-tile" data-index="${index}">
+                    ${isVideo
+                        ? `<video class="gallery-preview-media" src="${item.src}" muted playsinline preload="metadata"></video>`
+                        : `<img class="gallery-preview-media" src="${item.src}" draggable="false">`}
+                </div>
+            `;
+        }).join("");
+
         card.innerHTML = `
-            <img class="gallery-image" src="${photo.image}" draggable="false">
+            <div class="gallery-preview-grid">${previewMarkup}</div>
 
             <div class="gallery-info">
 
-                <h2>${photo.title}</h2>
+                <h2>${album.title}</h2>
 
                 <div class="gallery-date">
-                    ${photo.date}
+                    ${album.date || "Album"}
                 </div>
 
                 <div class="gallery-description">
-                    ${photo.description}
+                    ${album.items?.length ? `${album.items.length} item${album.items.length === 1 ? "" : "s"}` : "No media yet"}
                 </div>
 
             </div>
         `;
 
-        card.querySelector("img").addEventListener("click",()=>{
-
-            openLightbox(index);
-
+        card.querySelectorAll(".gallery-preview-tile").forEach(tile => {
+            tile.addEventListener("click", () => {
+                openLightbox(albumIndex, Number(tile.dataset.index));
+            });
         });
 
         content.appendChild(card);
@@ -108,85 +144,157 @@ export function closeGallery(){
 
 }
 
-function openLightbox(index){
+function openLightbox(albumIndex, itemIndex){
 
-    currentIndex = index;
+    currentIndex = itemIndex;
+    currentItems = albums[albumIndex]?.items || [];
 
-    const photo = photos[index];
+    if (!currentItems.length) return;
 
-    lightboxImage.src = photo.image;
-
-    lightboxImage.draggable = false;
-
-    lightboxImage.onload = ()=>{
-
-        resetCamera();
-
-    };
-
-    lightboxCaption.innerHTML = `
-        <strong>${photo.title}</strong><br>
-        ${photo.description}
-    `;
-
-    lightboxCounter.textContent =
-        `${index+1} / ${photos.length}`;
+    renderLightboxItem(currentItems[currentIndex], albumIndex);
 
     lightbox.style.display = "flex";
 
 }
 
+function renderLightboxItem(item, albumIndex){
+
+    const album = albums[albumIndex];
+
+    if (!item) return;
+
+    if (lightboxMedia) {
+        lightboxMedia.remove();
+    }
+
+    const mediaElement = item.type === "video"
+        ? document.createElement("video")
+        : document.createElement("img");
+
+    mediaElement.id = "lightbox-image";
+    mediaElement.className = "lightbox-media";
+    mediaElement.draggable = false;
+    mediaElement.src = item.src;
+
+    if (item.type === "video") {
+        mediaElement.controls = true;
+        mediaElement.autoplay = true;
+        mediaElement.playsinline = true;
+        mediaElement.muted = false;
+    }
+
+    lightboxViewport.appendChild(mediaElement);
+    lightboxMedia = mediaElement;
+
+    attachMediaEvents(mediaElement);
+
+    if (item.type === "image") {
+        mediaElement.onload = () => {
+            resetCamera();
+        };
+    } else {
+        resetCamera();
+    }
+
+    const captionParts = [];
+    if (item.name) captionParts.push(item.name);
+    if (item.description) captionParts.push(item.description);
+    if (item.date) captionParts.push(item.date);
+
+    lightboxCaption.innerHTML = `
+        <strong>${album.title}</strong><br>
+        ${captionParts.join(" • ") || item.name || album.title}
+    `;
+
+    lightboxCounter.textContent =
+        `${currentIndex + 1} / ${currentItems.length}`;
+
+}
+
 function nextImage(){
+
+    if (!currentItems.length) return;
 
     currentIndex++;
 
-    if(currentIndex >= photos.length)
+    if(currentIndex >= currentItems.length)
         currentIndex = 0;
 
-    openLightbox(currentIndex);
+    const activeAlbum = albums.findIndex(album => album.items?.length && album.items.some(item => item.src === currentItems[currentIndex]?.src));
+    renderLightboxItem(currentItems[currentIndex], activeAlbum >= 0 ? activeAlbum : 0);
 
 }
 
 function previousImage(){
 
+    if (!currentItems.length) return;
+
     currentIndex--;
 
     if(currentIndex < 0)
-        currentIndex = photos.length-1;
+        currentIndex = currentItems.length-1;
 
-    openLightbox(currentIndex);
+    const activeAlbum = albums.findIndex(album => album.items?.length && album.items.some(item => item.src === currentItems[currentIndex]?.src));
+    renderLightboxItem(currentItems[currentIndex], activeAlbum >= 0 ? activeAlbum : 0);
 
 }
 
-// Prevent the browser from dragging the image
-lightboxImage.addEventListener("dragstart", e => {
+function attachMediaEvents(mediaElement){
 
-    e.preventDefault();
+    mediaElement.addEventListener("dragstart", e => {
+        e.preventDefault();
+    });
 
-});
+    mediaElement.addEventListener("mousedown", e => {
 
-lightboxImage.addEventListener("mousedown", e => {
+        if (camera.scale <= 1)
+            return;
 
-    if (camera.scale <= 1)
-        return;
+        e.preventDefault();
 
-    e.preventDefault();
+        camera.dragging = true;
 
-    camera.dragging = true;
+        camera.lastMouseX = e.clientX;
+        camera.lastMouseY = e.clientY;
 
-    camera.lastMouseX = e.clientX;
-    camera.lastMouseY = e.clientY;
+        mediaElement.style.cursor = "grabbing";
 
-    lightboxImage.style.cursor = "grabbing";
+    });
 
-});
+    mediaElement.addEventListener("dblclick", e => {
+
+        e.preventDefault();
+
+        if (camera.scale === 1) {
+            camera.scale = 2.5;
+        } else {
+            resetCamera();
+        }
+
+        render();
+
+    });
+
+    mediaElement.addEventListener("mouseenter", () => {
+        mediaElement.style.cursor = camera.scale > 1 ? "grab" : "zoom-in";
+    });
+
+    mediaElement.addEventListener("mouseleave", () => {
+        if (!camera.dragging) {
+            mediaElement.style.cursor = "default";
+        }
+    });
+
+}
 
 window.addEventListener("mouseup", () => {
 
     camera.dragging = false;
 
-    lightboxImage.style.cursor =
-        camera.scale > 1 ? "grab" : "default";
+    if (lightboxMedia) {
+        lightboxMedia.style.cursor =
+            camera.scale > 1 ? "grab" : "default";
+    }
 
 });
 
@@ -212,7 +320,9 @@ lightbox.addEventListener("wheel", e => {
 
     e.preventDefault();
 
-    const rect = lightboxImage.getBoundingClientRect();
+    if (!lightboxMedia) return;
+
+    const rect = lightboxMedia.getBoundingClientRect();
 
     // Mouse position relative to image center
     const mx = e.clientX - rect.left - rect.width / 2;
@@ -239,35 +349,17 @@ lightbox.addEventListener("wheel", e => {
 
         resetCamera();
 
-        lightboxImage.style.cursor = "default";
+        lightboxMedia.style.cursor = "default";
 
         return;
 
     }
 
-    lightboxImage.style.cursor = "grab";
+    lightboxMedia.style.cursor = "grab";
 
     render();
 
 }, { passive:false });
-
-lightboxImage.addEventListener("dblclick", e => {
-
-    e.preventDefault();
-
-    if (camera.scale === 1) {
-
-        camera.scale = 2.5;
-
-    } else {
-
-        resetCamera();
-
-    }
-
-    render();
-
-});
 
 document.addEventListener("keydown", e => {
 
@@ -312,14 +404,6 @@ lightbox.addEventListener("click", e => {
 
 });
 
-lightboxImage.setAttribute("draggable", "false");
-
-lightboxImage.addEventListener("dragstart", e => {
-
-    e.preventDefault();
-
-});
-
 let touchDistance = 0;
 
 lightbox.addEventListener("touchstart", e => {
@@ -360,39 +444,24 @@ lightbox.addEventListener("touchmove", e => {
 
 }, { passive: false });
 
-lightboxImage.addEventListener("mouseenter", () => {
-
-    lightboxImage.style.cursor =
-        camera.scale > 1 ? "grab" : "zoom-in";
-
-});
-
-lightboxImage.addEventListener("mouseleave", () => {
-
-    if (!camera.dragging)
-        lightboxImage.style.cursor = "default";
-
-});
-
 function preload(index){
 
-    const img = new Image();
+    if (!currentItems[index]) return;
 
-    img.src = photos[index].image;
+    if (currentItems[index].type === "image") {
+        const img = new Image();
+        img.src = currentItems[index].src;
+    }
 
 }
 
 const oldOpenLightbox = openLightbox;
 
-openLightbox = function(index){
+openLightbox = function(albumIndex, itemIndex){
 
-    oldOpenLightbox(index);
+    oldOpenLightbox(albumIndex, itemIndex);
 
-    preload((index + 1) % photos.length);
-
-    preload(
-        (index - 1 + photos.length) %
-        photos.length
-    );
+    preload((itemIndex + 1) % currentItems.length);
+    preload((itemIndex - 1 + currentItems.length) % currentItems.length);
 
 };

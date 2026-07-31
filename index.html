@@ -61,7 +61,7 @@
         <img id="lightbox-image" draggable="false">
 
     </div>
-    
+
     <button id="lightbox-prev">&#10094;</button>
     <button id="lightbox-next">&#10095;</button>
 
@@ -76,6 +76,210 @@
     <span id="lightbox-close">&times;</span>
 
 </div>
+
+<div id="profile-overlay">
+
+<div id="profile-window">
+
+<div id="profile-header">
+
+    <div class="traffic">
+
+        <span class="red"></span>
+        <span class="yellow"></span>
+        <span class="green"></span>
+
+    </div>
+
+    <div class="title">
+        profile@terminal
+    </div>
+
+</div>
+
+<div id="profile-content">
+
+    <div id="profile-loading">
+        Connecting to Discord...
+    </div>
+
+    <div id="profile-card" style="display:none;">
+
+        <!-- Banner -->
+
+        <div id="profile-banner"></div>
+
+        <!-- Avatar + Badges -->
+
+        <div id="profile-top">
+
+            <div id="profile-avatar-container">
+
+                <img id="profile-avatar">
+
+                <img id="profile-decoration">
+
+                <div id="profile-status-dot"></div>
+
+            </div>
+
+            <div id="profile-badges"></div>
+
+        </div>
+
+        <!-- Names -->
+
+        <div id="profile-names">
+
+            <div id="profile-display-name"></div>
+
+            <div id="profile-username"></div>
+
+            <div id="profile-status"></div>
+
+        </div>
+
+        <div class="profile-divider"></div>
+
+        <!-- About -->
+
+        <section class="profile-section">
+
+            <h3>About Me</h3>
+
+            <p id="profile-about"></p>
+
+        </section>
+
+        <div class="profile-divider"></div>
+
+        <!-- Activity -->
+
+<section class="profile-section">
+
+    <h3>Activity</h3>
+
+    <div id="profile-activity">
+
+<div class="activity-card">
+
+    <div class="activity-assets">
+
+        <img
+            class="activity-large"
+            src="${data.spotify.album_art_url}"
+            draggable="false"
+        >
+
+    </div>
+
+    <div class="activity-info">
+
+                <div id="activity-app" class="activity-app">
+                    No Activity
+                </div>
+
+                <div id="activity-title" class="activity-title">
+                    Nothing is currently running.
+                </div>
+
+                <div id="activity-details" class="activity-details"></div>
+
+                <div id="activity-extra" class="activity-extra"></div>
+
+                <div
+                    id="activity-progress-container"
+                    class="activity-progress-container"
+                >
+
+                    <div class="activity-progress-bar">
+
+                        <div
+                            id="activity-progress-fill"
+                            class="activity-progress-fill"
+                        ></div>
+
+                    </div>
+
+                    <div
+                        id="activity-progress-text"
+                        class="activity-progress-text"
+                    >
+
+                        0:00 / 0:00
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <div class="profile-divider"></div>
+
+        <!-- Devices -->
+
+        <section class="profile-section">
+
+            <h3>Devices</h3>
+
+            <div id="profile-devices"></div>
+
+        </section>
+
+        <div class="profile-divider"></div>
+
+        <!-- Member Since -->
+
+        <section class="profile-section">
+
+            <h3>Discord Member Since</h3>
+
+            <div id="profile-created"></div>
+
+        </section>
+
+        <div class="profile-divider"></div>
+
+        <!-- Discord ID -->
+
+        <section class="profile-section">
+
+            <h3>Discord ID</h3>
+
+            <div id="profile-id-row">
+
+                <span id="profile-id"></span>
+
+                <button id="copy-id">
+
+                    Copy
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+
 </div>
     <div class="vignette"></div>
     <script type="module" src="./js/main.js"></script>

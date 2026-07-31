@@ -46,6 +46,13 @@ export default {
         output: []
     },
 
+    profile: {
+        aliases: ["profile", "discord", "myprofile"],
+        description: "Show my discord profile",
+        hidden: false,
+        output: []
+    },    
+
     hostname: {
         description: "",
         hidden: true,

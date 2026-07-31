@@ -1,10 +1,18 @@
-export default [
+const manifestUrl = "./images/gallery/albums/manifest.json";
 
-{
-    image: "./images/gallery/mykittie.jpg",
-    title: "This is my cat Loki :)",
-    date: "30 Jul 2025",
-    description: "He's sleeping shhh xD"
-},
+async function loadAlbums() {
+    try {
+        const response = await fetch(manifestUrl);
+        if (!response.ok) {
+            return [];
+        }
 
-];
+        const manifest = await response.json();
+        return Array.isArray(manifest) ? manifest : [];
+    } catch (error) {
+        console.error("Failed to load gallery manifest.", error);
+        return [];
+    }
+}
+
+export default loadAlbums;
