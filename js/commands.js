@@ -51,7 +51,19 @@ export default {
         description: "Show my discord profile",
         hidden: false,
         output: []
-    },    
+    },
+
+    "matt": {
+        aliases: ["mattsite"],
+        description: "Show my discord profile",
+        hidden: false,
+        output: [
+            {
+                text: "Matt's Site :3",
+                href: "https://doves-place.nekoweb.org/"
+            },
+        ]
+    }, 
 
     hostname: {
         description: "",
