@@ -55,7 +55,7 @@ export default {
 
     "matt": {
         aliases: ["mattsite"],
-        description: "Show my discord profile",
+        description: "Matt's website!",
         hidden: false,
         output: [
             {
